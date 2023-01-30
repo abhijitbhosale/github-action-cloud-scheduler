@@ -8,7 +8,7 @@ on:
 env:
   PROJECT_ID: ${{secrets.GKE_PROJECT}}
   IMAGE: github-action-cloud-run-scheduler
-  TAG: 1.0.${{ github.run_number }}
+  TAG: 1.0.0
   
 jobs:
   setup-build-publish-deploy:
