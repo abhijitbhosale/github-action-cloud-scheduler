@@ -12,7 +12,7 @@ public class SchedulerApplication implements CommandLineRunner{
 	}
 
 	public void run(String... args) throws Exception {
-		System.out.println("####################  GithubActionGkeApplication run Called 12##################");
+		System.out.println("####################  SchedulerApplication run Called ##################");
 		System.exit(0);
 	}
 
