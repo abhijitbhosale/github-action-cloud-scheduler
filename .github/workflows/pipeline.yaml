@@ -1,4 +1,4 @@
-name: Build and Push to Container Registry
+name: Build and Deploy to Cloud Run
 
 on:
   push:
@@ -10,12 +10,12 @@ env:
   GKE_CLUSTER: github-action-cloud-scheduler
   GKE_ZONE: us-central1
   DEPLOYMENT_NAME: github-action-cloud-scheduler
-  IMAGE: github-action-cloud-scheduler
+  IMAGE: github-action-cloud-scheduler-image
   TAG: 1.0.${{ github.run_number }}
   
 jobs:
   setup-build-publish-deploy:
-    name: Build and Push to Container Registry 
+    name: Setup Build Publish Deploy to Cloud Run 
     runs-on: ubuntu-latest
     
     steps:
@@ -47,8 +47,18 @@ jobs:
           
       - name: Build Docker Image
         run: |-
-          docker build --tag "gcr.io/${{secrets.GKE_PROJECT}}/$IMAGE:$TAG" .
+          docker build --tag "gcr.io/$PROJECT_ID/$IMAGE:$TAG" .
           
       - name: Publish Docker Image
         run: |-
           docker push "gcr.io/$PROJECT_ID/$IMAGE:$TAG"
+          
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          service: github-action-cloud-scheduler
+          region: us-central1
+          # NOTE: If required, update to the appropriate source folder
+          # source: ./
+          image: 'gcr.io/${{ env.PROJECT_ID }}/${{ env.IMAGE }}:${{ env.TAG }}'
